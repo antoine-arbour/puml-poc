@@ -1,68 +1,72 @@
 ' ───────────────────────────────────────────────
-'  brand-theme.puml  ─ Company-wide PlantUML skin
+'  brand-theme.puml  —  Company-wide PlantUML skin
+'  v2025-05-15 – Ember promoted to primary colour
 ' ───────────────────────────────────────────────
-' Primary palette  (HEX values come from your slide)
+
+' Palette
 !define BRAND_WHITE  #FFFFFF
 !define BRAND_CLAY   #E4DFDC   ' warm background
 !define BRAND_BLACK  #000000
-!define BRAND_EMBER  #EE5F2B   ' call-to-action accent
-!define BRAND_TEAL   #31808E
+!define BRAND_EMBER  #EE5F2B   ' **primary accent**
+!define BRAND_TEAL   #31808E   ' secondary accent
 !define BRAND_SAGE   #6E8E66
 !define BRAND_CLOUD  #A7D1EB
 
 ' ─────────── GLOBAL DEFAULTS ───────────
-skinparam BackgroundColor         BRAND_WHITE
-skinparam DefaultFontName         "Inter"
-skinparam DefaultFontSize         14
-skinparam Shadowing               false
-skinparam ArrowThickness          2
-skinparam ArrowColor              BRAND_TEAL
-skinparam HyperlinkColor          BRAND_EMBER
-skinparam NoteBackgroundColor     BRAND_CLAY
-skinparam NoteBorderColor         BRAND_TEAL
-skinparam LegendBackgroundColor   BRAND_CLOUD
-skinparam LegendBorderColor       BRAND_TEAL
-skinparam TitleFontColor          BRAND_BLACK
-skinparam LineColor               BRAND_TEAL
-skinparam ParticipantBorderColor  BRAND_TEAL
+skinparam BackgroundColor           BRAND_WHITE
+skinparam DefaultFontName           "Inter"
+skinparam DefaultFontSize           14
+skinparam Shadowing                 false
+
+skinparam ArrowThickness            2
+skinparam ArrowColor                BRAND_EMBER         ' ← Ember is now the default stroke
+skinparam LineColor                 BRAND_EMBER
+skinparam TitleFontColor            BRAND_BLACK
+skinparam HyperlinkColor            BRAND_EMBER
+
+skinparam NoteBackgroundColor       BRAND_CLAY
+skinparam NoteBorderColor           BRAND_EMBER
+skinparam LegendBackgroundColor     BRAND_CLOUD
+skinparam LegendBorderColor         BRAND_EMBER
+
+skinparam ParticipantBorderColor    BRAND_EMBER
 skinparam ParticipantBackgroundColor #F7F9FA
-skinparam ParticipantFontColor    BRAND_BLACK
-skinparam SequenceLifeLineBorderColor BRAND_TEAL
+skinparam ParticipantFontColor      BRAND_BLACK
+skinparam SequenceLifeLineBorderColor BRAND_EMBER
 skinparam SequenceLifeLineBackgroundColor BRAND_SAGE
 
 ' ─────────── COMPONENT DIAGRAM TWEAKS ───────────
 skinparam component {
-  BackgroundColor                 #F5F9FC
-  BorderColor                     BRAND_TEAL
-  FontColor                       BRAND_BLACK
-  ArrowColor                      BRAND_TEAL
+  BackgroundColor                   #F5F9FC
+  BorderColor                       BRAND_EMBER
+  FontColor                         BRAND_BLACK
+  ArrowColor                        BRAND_EMBER
 }
 
 ' ─────────── SEQUENCE DIAGRAM TWEAKS ───────────
 skinparam sequence {
-  ActorBorderColor                BRAND_BLACK
-  ActorBackgroundColor            BRAND_CLOUD
-  ActorFontColor                  BRAND_BLACK
-  BoxBackgroundColor              BRAND_CLAY
-  BoxBorderColor                  BRAND_TEAL
-  LifelineBorderColor             BRAND_TEAL
-  LifelineBackgroundColor         BRAND_SAGE
-  MessageFontColor                BRAND_BLACK
+  ActorBorderColor                  BRAND_BLACK
+  ActorBackgroundColor              BRAND_CLOUD
+  ActorFontColor                    BRAND_BLACK
+  BoxBackgroundColor                BRAND_CLAY
+  BoxBorderColor                    BRAND_EMBER
+  LifelineBorderColor               BRAND_EMBER
+  LifelineBackgroundColor           BRAND_SAGE
+  MessageFontColor                  BRAND_BLACK
 }
 
-' ─────────── STEREOTYPE COLOURS (examples) ───────────
-' You can tag elements with <<cta>> or <<secondary>> etc.
-' to colour nodes without repeating HEX everywhere.
+' ─────────── STEREOTYPE COLOURS ───────────
 skinparam stereotype {
-  cta          {
+  primary {                         ' use <<primary>> when you need the orange block
     BackgroundColor BRAND_EMBER
     BorderColor     BRAND_BLACK
     FontColor       BRAND_WHITE
   }
-  secondary    {
-    BackgroundColor BRAND_CLOUD
-    BorderColor     BRAND_TEAL
-    FontColor       BRAND_BLACK
+  secondary {                       ' teal supporting blocks
+    BackgroundColor BRAND_TEAL
+    BorderColor     BRAND_BLACK
+    FontColor       BRAND_WHITE
   }
 }
+
 ' ───────────────────────────────────────────────
