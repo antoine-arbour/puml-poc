@@ -1,72 +1,94 @@
-' ───────────────────────────────────────────────
-'  brand-theme.puml  —  Company-wide PlantUML skin
-'  v2025-05-15 – Ember promoted to primary colour
-' ───────────────────────────────────────────────
-
-' Palette
+@startuml
+' ─────────────────────────────────────────────────────────────
+'  Brand theme  – Ember (#EE5F2B) is the primary accent colour
+' ─────────────────────────────────────────────────────────────
 !define BRAND_WHITE  #FFFFFF
-!define BRAND_CLAY   #E4DFDC   ' warm background
+!define BRAND_CLAY   #E4DFDC
 !define BRAND_BLACK  #000000
-!define BRAND_EMBER  #EE5F2B   ' **primary accent**
-!define BRAND_TEAL   #31808E   ' secondary accent
+!define BRAND_EMBER  #EE5F2B
+!define BRAND_TEAL   #31808E
 !define BRAND_SAGE   #6E8E66
 !define BRAND_CLOUD  #A7D1EB
 
-' ─────────── GLOBAL DEFAULTS ───────────
-skinparam BackgroundColor           BRAND_WHITE
-skinparam DefaultFontName           "Inter"
-skinparam DefaultFontSize           14
-skinparam Shadowing                 false
-
-skinparam ArrowThickness            2
-skinparam ArrowColor                BRAND_EMBER         ' ← Ember is now the default stroke
-skinparam LineColor                 BRAND_EMBER
-skinparam TitleFontColor            BRAND_BLACK
-skinparam HyperlinkColor            BRAND_EMBER
-
-skinparam NoteBackgroundColor       BRAND_CLAY
-skinparam NoteBorderColor           BRAND_EMBER
-skinparam LegendBackgroundColor     BRAND_CLOUD
-skinparam LegendBorderColor         BRAND_EMBER
-
-skinparam ParticipantBorderColor    BRAND_EMBER
-skinparam ParticipantBackgroundColor #F7F9FA
-skinparam ParticipantFontColor      BRAND_BLACK
-skinparam SequenceLifeLineBorderColor BRAND_EMBER
-skinparam SequenceLifeLineBackgroundColor BRAND_SAGE
-
-' ─────────── COMPONENT DIAGRAM TWEAKS ───────────
-skinparam component {
-  BackgroundColor                   #F5F9FC
-  BorderColor                       BRAND_EMBER
-  FontColor                         BRAND_BLACK
-  ArrowColor                        BRAND_EMBER
-}
-
-' ─────────── SEQUENCE DIAGRAM TWEAKS ───────────
+skinparam BackgroundColor             BRAND_WHITE
+skinparam DefaultFontName             "Inter"
+skinparam DefaultFontSize             14
+skinparam Shadowing                   false
+skinparam ArrowThickness              2
+skinparam ArrowColor                  BRAND_EMBER
+skinparam LineColor                   BRAND_EMBER
+skinparam sequenceArrowColor          BRAND_EMBER
+skinparam HyperlinkColor              BRAND_EMBER
+skinparam NoteBackgroundColor         BRAND_CLAY
+skinparam NoteBorderColor             BRAND_EMBER
+skinparam LegendBackgroundColor       BRAND_CLOUD
+skinparam LegendBorderColor           BRAND_EMBER
+skinparam TitleFontColor              BRAND_BLACK
+skinparam ParticipantBorderColor      BRAND_EMBER
+skinparam ParticipantBackgroundColor  #F7F9FA
+skinparam ParticipantFontColor        BRAND_BLACK
 skinparam sequence {
-  ActorBorderColor                  BRAND_BLACK
-  ActorBackgroundColor              BRAND_CLOUD
-  ActorFontColor                    BRAND_BLACK
-  BoxBackgroundColor                BRAND_CLAY
-  BoxBorderColor                    BRAND_EMBER
-  LifelineBorderColor               BRAND_EMBER
-  LifelineBackgroundColor           BRAND_SAGE
-  MessageFontColor                  BRAND_BLACK
+  ArrowColor            BRAND_EMBER
+  MessageArrowColor     BRAND_EMBER
+  ActorBorderColor      BRAND_BLACK
+  ActorBackgroundColor  BRAND_CLOUD
+  ActorFontColor        BRAND_BLACK
+  BoxBackgroundColor    BRAND_CLAY
+  BoxBorderColor        BRAND_EMBER
+  LifelineBorderColor   BRAND_EMBER
+  LifelineBackgroundColor BRAND_SAGE
+  MessageFontColor      BRAND_BLACK
 }
-
-' ─────────── STEREOTYPE COLOURS ───────────
 skinparam stereotype {
-  primary {                         ' use <<primary>> when you need the orange block
-    BackgroundColor BRAND_EMBER
-    BorderColor     BRAND_BLACK
-    FontColor       BRAND_WHITE
-  }
-  secondary {                       ' teal supporting blocks
-    BackgroundColor BRAND_TEAL
-    BorderColor     BRAND_BLACK
-    FontColor       BRAND_WHITE
-  }
+  primary   { BackgroundColor BRAND_EMBER BorderColor BRAND_BLACK FontColor BRAND_WHITE }
+  secondary { BackgroundColor BRAND_TEAL  BorderColor BRAND_BLACK FontColor BRAND_WHITE }
 }
 
-' ───────────────────────────────────────────────
+' ─────────────────────────────────────────────────────────────
+'  Netflix – high-level playback sequence (control & data plane)
+' ─────────────────────────────────────────────────────────────
+title Netflix Playback Flow
+
+actor User
+participant "Client App\n(Smart-TV / Mobile / Browser)" as Client
+participant "Open Connect CDN"        as CDN
+participant "AWS Elastic\nLoad Balancer" as ELB
+participant "Edge Gateway\n(Envoy/Zuul)" as EdgeGW
+participant "API Gateway"             as APIGW
+participant "Service Mesh"            as Mesh
+participant "Auth Service"            as Auth
+participant "Catalog Service"         as Catalog
+database   "Cassandra / EVCache"      as DB
+participant "Analytics Pipeline"      as Analytics
+
+box "Playback control plane" #lightgrey
+  User   -> Client  : Tap “Play Movie XYZ”
+  Client -> ELB     : HTTPS /playback (token)
+  ELB    -> EdgeGW  : forward
+  EdgeGW -> APIGW   : REST /v1/playback
+  APIGW  -> Mesh    : route request
+  Mesh   -> Auth    : validate(token)
+  Auth   --> Mesh   : OK
+  Mesh   -> Catalog : getMovie(id)
+  Catalog -> DB     : SELECT … WHERE id = XYZ
+  DB     --> Catalog: metadata
+  Catalog --> Mesh  : metadata
+  Mesh   --> APIGW  : metadata
+  APIGW  --> EdgeGW : metadata
+  EdgeGW --> ELB    : metadata
+  ELB    --> Client : playback manifest + CDN URLs
+end box
+
+box "Data plane (streaming)" #lightgrey
+  Client -> CDN  : GET segment 1
+  CDN    --> Client : segment 1
+  Client -> CDN  : GET segment 2…N
+  CDN    --> Client : segments 2…N
+end box
+
+box Telemetry #lightgrey
+  Client -> APIGW : POST /metrics (QoE)
+  APIGW  -> Mesh  : route
+  Mesh   -> Analytics : ingest QoE events
+end box
+@enduml
