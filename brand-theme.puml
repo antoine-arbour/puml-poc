@@ -1,0 +1,68 @@
+' ───────────────────────────────────────────────
+'  brand-theme.puml  ─ Company-wide PlantUML skin
+' ───────────────────────────────────────────────
+' Primary palette  (HEX values come from your slide)
+!define BRAND_WHITE  #FFFFFF
+!define BRAND_CLAY   #E4DFDC   ' warm background
+!define BRAND_BLACK  #000000
+!define BRAND_EMBER  #EE5F2B   ' call-to-action accent
+!define BRAND_TEAL   #31808E
+!define BRAND_SAGE   #6E8E66
+!define BRAND_CLOUD  #A7D1EB
+
+' ─────────── GLOBAL DEFAULTS ───────────
+skinparam BackgroundColor         BRAND_WHITE
+skinparam DefaultFontName         "Inter"
+skinparam DefaultFontSize         14
+skinparam Shadowing               false
+skinparam ArrowThickness          2
+skinparam ArrowColor              BRAND_TEAL
+skinparam HyperlinkColor          BRAND_EMBER
+skinparam NoteBackgroundColor     BRAND_CLAY
+skinparam NoteBorderColor         BRAND_TEAL
+skinparam LegendBackgroundColor   BRAND_CLOUD
+skinparam LegendBorderColor       BRAND_TEAL
+skinparam TitleFontColor          BRAND_BLACK
+skinparam LineColor               BRAND_TEAL
+skinparam ParticipantBorderColor  BRAND_TEAL
+skinparam ParticipantBackgroundColor #F7F9FA
+skinparam ParticipantFontColor    BRAND_BLACK
+skinparam SequenceLifeLineBorderColor BRAND_TEAL
+skinparam SequenceLifeLineBackgroundColor BRAND_SAGE
+
+' ─────────── COMPONENT DIAGRAM TWEAKS ───────────
+skinparam component {
+  BackgroundColor                 #F5F9FC
+  BorderColor                     BRAND_TEAL
+  FontColor                       BRAND_BLACK
+  ArrowColor                      BRAND_TEAL
+}
+
+' ─────────── SEQUENCE DIAGRAM TWEAKS ───────────
+skinparam sequence {
+  ActorBorderColor                BRAND_BLACK
+  ActorBackgroundColor            BRAND_CLOUD
+  ActorFontColor                  BRAND_BLACK
+  BoxBackgroundColor              BRAND_CLAY
+  BoxBorderColor                  BRAND_TEAL
+  LifelineBorderColor             BRAND_TEAL
+  LifelineBackgroundColor         BRAND_SAGE
+  MessageFontColor                BRAND_BLACK
+}
+
+' ─────────── STEREOTYPE COLOURS (examples) ───────────
+' You can tag elements with <<cta>> or <<secondary>> etc.
+' to colour nodes without repeating HEX everywhere.
+skinparam stereotype {
+  cta          {
+    BackgroundColor BRAND_EMBER
+    BorderColor     BRAND_BLACK
+    FontColor       BRAND_WHITE
+  }
+  secondary    {
+    BackgroundColor BRAND_CLOUD
+    BorderColor     BRAND_TEAL
+    FontColor       BRAND_BLACK
+  }
+}
+' ───────────────────────────────────────────────
